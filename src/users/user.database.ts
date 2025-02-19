@@ -11,7 +11,7 @@ function loadUsers () : Users {
         return JSON.parse(data)
     } catch (error) {
         console.log(`Error ${error}`)
-        return {}
+        return{}
     }
 }
 
@@ -20,7 +20,7 @@ function saveUsers () {
         fs.writeFileSync("./users.json", JSON.stringify(users), "utf-8")
         console.log(`User saved successfully!`)
     } catch (error) {
-        console.log(`Error: ${error}`)
+        console.log(`Error : ${error}`)
     }
 }
 
@@ -28,8 +28,8 @@ export const findAll = async (): Promise<UnitUser[]> => Object.values(users);
 
 export const findOne = async (id: string): Promise<UnitUser> => users[id];
 
-export const create = async (UserData: UnitUser): Promise<UnitUser | null> => {
-
+export const create = async (userData: UnitUser): Promise<UnitUser | null> => {
+   
     let id = random()
 
     let check_user = await findOne(id);
@@ -41,12 +41,12 @@ export const create = async (UserData: UnitUser): Promise<UnitUser | null> => {
 
     const salt = await bcrypt.genSalt(10);
 
-    const hashedPassword = await bcrypt.hash(UserData.password, salt);
-
+    const hashedPassword = await bcrypt.hash(userData.password, salt);
+   
     const user : UnitUser = {
         id : id,
-        username : UserData.username,
-        email : UserData.email,
+        username : userData.username,
+        email : userData.email,
         password: hashedPassword
     };
 
@@ -58,7 +58,7 @@ export const create = async (UserData: UnitUser): Promise<UnitUser | null> => {
 };
 
 export const findByEmail = async (user_email: string): Promise<null | UnitUser> => {
-
+    
     const allUsers = await findAll();
 
     const getUser = allUsers.find(result => user_email === result.email);
@@ -68,9 +68,9 @@ export const findByEmail = async (user_email: string): Promise<null | UnitUser> 
     }
 
     return getUser;
-} 
+};
 
-export const comparePassword = async (email : string, supplied_password : string) : Promise<null | UnitUser> => {
+export const comparePassword = async (email:string, supplied_password : string): Promise<null | UnitUser> => {
 
     const user = await findByEmail(email)
 
@@ -91,7 +91,7 @@ export const update = async (id : string, updateValues : User) : Promise<UnitUse
         return null
     }
 
-    if(updateValues.password) {
+    if (updateValues.password) {
         const salt = await bcrypt.genSalt(10)
         const newPass = await bcrypt.hash(updateValues.password, salt)
 
@@ -99,7 +99,7 @@ export const update = async (id : string, updateValues : User) : Promise<UnitUse
     }
 
     users[id] = {
-        ...userExists,
+        ...userExists,  
         ...updateValues
     }
 
@@ -108,7 +108,7 @@ export const update = async (id : string, updateValues : User) : Promise<UnitUse
     return users[id]
 }
 
-export const remove = async (id: string) : Promise<null | void> => {
+export const remove = async (id : string) : Promise<null | void> => {
 
     const user = await findOne(id)
 
@@ -119,4 +119,4 @@ export const remove = async (id: string) : Promise<null | void> => {
     delete users[id]
 
     saveUsers()
-} 
+}

@@ -1,10 +1,10 @@
 export interface User {
     username : string,
-    email : string,
+    email : string, 
     password : string
 }
 
-export interface UnitUser extends User {
+export interface UnitUser extends User{
     id : string
 }
 
